@@ -52,6 +52,18 @@ function Palette() {
     } else {
       generateAndSaveNewPalette();
     }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "n" || event.key === "N") {
+        generateAndSaveNewPalette();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   useEffect(() => {
@@ -113,12 +125,12 @@ function Palette() {
 
   return (
     <>
-      <section className="grid grid-cols-1 h-full xl:flex">
+      <section className="grid grid-cols-1 gap-5 h-full xl:flex px-6">
         {colors.map((color, index) => {
           return (
             <div
               key={index}
-              className={`flex-1 h-full flex flex-col justify-center items-center relative group`}
+              className={`flex-1 xl:h-3/5 flex rounded-md flex-col justify-center items-center relative group`}
               style={{ backgroundColor: color.hex }}
             >
               <div className="absolute top-2 left-2 flex space-x-2">
@@ -209,7 +221,7 @@ function Palette() {
                 </Button>
               </div>
               <h1
-                className={`text-2xl font-semibold poin select-none ${getTextColorClass(
+                className={`text-2xl text-center font-semibold poin select-none ${getTextColorClass(
                   color.hex
                 )}`}
               >
@@ -227,6 +239,10 @@ function Palette() {
                     key={i}
                     onClick={() => {
                       navigator.clipboard.writeText(format);
+                      toast.success("Text copied to clipboard!", {
+                        duration: 1500,
+                        description: `Copied format: ${format}`,
+                      });
                     }}
                     className={`cursor-pointer text-lg uppercase font-semibold select-none ${getTextColorClass(
                       color.hex
