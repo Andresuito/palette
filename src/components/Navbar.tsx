@@ -10,7 +10,7 @@ function Navbar() {
       <div className="flex items-center justify-between">
         <div className="group flex items-center space-x-2 font-medium tracking-[-0.10em] transition-opacity duration-75 ">
           <h1 className="text-4xl text-transparent bg-clip-text bg-gradient-to-r font-extrabold from-cyan-400 to-lime-400 dark:from-purple-400 dark:to-pink-400">
-            Palette
+            palette
           </h1>
         </div>
         <ul className="space-x-2 flex">
