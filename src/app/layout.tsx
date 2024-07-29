@@ -31,8 +31,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ThemeConfigProvider>
-            <HoverProvider>{children}</HoverProvider>
-            <Toaster />
+            <HoverProvider>
+              {children} <Toaster />
+            </HoverProvider>
           </ThemeConfigProvider>
         </ThemeProvider>
       </body>
