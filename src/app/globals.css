@@ -672,3 +672,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+.toaster-radius {
+  border-radius: var(--radius);
+}
