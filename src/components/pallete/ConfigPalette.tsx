@@ -11,7 +11,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-const ColorFormatOptions = ["HEX", "HLS", "RGB", "CMYK"];
+const ColorFormatOptions = ["HEX", "HSL", "RGB", "RGBA", "CMYK", "HSB"];
 
 function ConfigPallete() {
   const { setIsHovered, colorFormats, setColorFormats } = usePalette();
@@ -51,7 +51,7 @@ const Header = () => (
   <div className="space-y-2">
     <h4 className="font-medium">Palette Settings</h4>
     <p className="text-sm text-muted-foreground">
-      Configure the website as you like
+      Configure the palette settings to your liking.
     </p>
   </div>
 );
