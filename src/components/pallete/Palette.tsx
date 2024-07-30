@@ -13,6 +13,8 @@ import {
   hexToRgba,
   hexToHsl,
   hexToCmyk,
+  hexToHsb,
+  hexToRgb,
   getTextColor,
 } from "@/utils/colorUtils";
 import { usePalette } from "@/context/PaletteContext";
@@ -66,8 +68,10 @@ function Palette() {
   const getColorFormats = (hex: string) => {
     const formats: { [key: string]: string } = {
       HEX: hex,
-      RGB: hexToRgba(hex),
-      HLS: hexToHsl(hex),
+      RGB: `rgb(${Object.values(hexToRgb(hex)).join(", ")})`,
+      RGBA: hexToRgba(hex),
+      HSL: hexToHsl(hex),
+      HSB: hexToHsb(hex),
       CMYK: hexToCmyk(hex),
     };
     return colorFormats.map((format) => formats[format]);
@@ -181,7 +185,7 @@ function Palette() {
                       description: `Copied format: ${format}`,
                     });
                   }}
-                  className={`cursor-pointer text-lg uppercase font-semibold select-none ${getTextColorClass(
+                  className={`cursor-pointer text-lg uppercase select-none ${getTextColorClass(
                     color.hex
                   )}`}
                 >
