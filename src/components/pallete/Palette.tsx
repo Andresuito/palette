@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DrawingPinIcon,
   DrawingPinFilledIcon,
@@ -36,6 +36,10 @@ function Palette() {
     generateNewColor,
   } = usePalette();
 
+  const [removingColorIndex, setRemovingColorIndex] = useState<number | null>(
+    null
+  );
+
   useEffect(() => {
     if (colors.length === 0) {
       generateAndSaveNewPalette();
@@ -56,13 +60,17 @@ function Palette() {
   };
 
   const handleClearColor = (index: number) => {
-    const newColors = colors.filter((_, i) => i !== index);
-    setColors(newColors);
-    if (newColors.length === 0) {
-      generateAndSaveNewPalette();
-    } else {
-      localStorage.setItem("palette", JSON.stringify(newColors));
-    }
+    setRemovingColorIndex(index);
+    setTimeout(() => {
+      const newColors = colors.filter((_, i) => i !== index);
+      setColors(newColors);
+      setRemovingColorIndex(null);
+      if (newColors.length === 0) {
+        generateAndSaveNewPalette();
+      } else {
+        localStorage.setItem("palette", JSON.stringify(newColors));
+      }
+    }, 300); // Duration of the animation
   };
 
   const getColorFormats = (hex: string) => {
@@ -83,11 +91,13 @@ function Palette() {
 
   return (
     <>
-      <section className="grid grid-cols-1 gap-5 xl:h-3/4 xl:flex px-6">
+      <section className="flex flex-col xl:flex-row gap-5 h-[75%] xl:h-[80%] px-6">
         {colors.map((color, index) => (
           <div
             key={index}
-            className={`flex-1 xl:h-full flex rounded-md flex-col justify-center items-center relative group`}
+            className={`flex-1 h-full flex rounded-md flex-col justify-center items-center relative group ${
+              removingColorIndex === index ? "slide-out flex-transition" : ""
+            }`}
             style={{ backgroundColor: color.hex }}
           >
             <div className="absolute top-2 left-2 flex space-x-2 group">

@@ -673,6 +673,30 @@
   }
 }
 
+/* Style */
 .toaster-radius {
   border-radius: var(--radius);
+}
+
+/* Animations */
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(70%);
+  }
+}
+
+.slide-out {
+  animation: slideOut 0.5s forwards;
+  overflow: hidden;
+  flex: 0 !important;
+}
+
+.flex-transition {
+  transition: flex 0.3s ease-out;
+  flex-grow: 1;
 }

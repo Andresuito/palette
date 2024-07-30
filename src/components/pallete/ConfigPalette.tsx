@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Palette } from "lucide-react";
 import { Button } from "../ui/button";
 import { usePalette } from "@/context/PaletteContext";
@@ -10,11 +10,23 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Share1Icon } from "@radix-ui/react-icons";
 
 const ColorFormatOptions = ["HEX", "HSL", "RGB", "RGBA", "CMYK", "HSB"];
 
 function ConfigPallete() {
-  const { setIsHovered, colorFormats, setColorFormats } = usePalette();
+  const { setIsHovered, colorFormats, setColorFormats, palette } = usePalette();
+  const [exportContent, setExportContent] = useState<string>("");
+  const [exportTitle, setExportTitle] = useState<string>("");
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   const handleCheckboxChange = (value: string) => {
     setColorFormats((prev: string[]) =>
@@ -24,12 +36,24 @@ function ConfigPallete() {
     );
   };
 
+  const handleExport = (format: string) => {
+    let content = "";
+    if (format === "CSS") {
+      content = paletteToCSS(palette);
+    } else if (format === "JSON") {
+      content = JSON.stringify(palette, null, 2);
+    }
+    setExportTitle(format);
+    setExportContent(content);
+    setIsDialogOpen(true);
+  };
+
   return (
-    <div>
+    <div className="flex space-x-3 items-center">
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="group" size="icon">
-            <Palette className="h-[1.2rem] w-[1.2rem] group-hover:scale-105 group-hover:rotate-12 duration-200" />
+          <Button variant="default" className="group" size="sm">
+            <Palette className="h-[1.1rem] w-[1.1rem] group-hover:scale-105 group-hover:rotate-12 duration-200" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-80 mr-6">
@@ -43,6 +67,14 @@ function ConfigPallete() {
           </div>
         </PopoverContent>
       </Popover>
+      <ExportColors handleExport={handleExport} />
+      <ExportDialog
+        isOpen={isDialogOpen}
+        title={exportTitle}
+        content={exportContent}
+        setExportContent={setExportContent}
+        setIsDialogOpen={setIsDialogOpen}
+      />
     </div>
   );
 }
@@ -87,5 +119,90 @@ const ColorFormatSection = ({
     </div>
   </div>
 );
+
+const ExportColors = ({
+  handleExport,
+}: {
+  handleExport: (format: string) => void;
+}) => (
+  <div>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="default" size="sm">
+          Export{" "}
+          <Share1Icon className="ml-2 h-[1.1rem] w-[1.1rem] group-hover:scale-105 group-hover:rotate-12 duration-200" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Export Colors</DialogTitle>
+          <DialogDescription>
+            Export your palette of colors in the following formats.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid grid-cols-2 gap-4 py-4">
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={() => handleExport("CSS")}
+          >
+            CSS
+          </Button>
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={() => handleExport("JSON")}
+          >
+            JSON
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  </div>
+);
+
+const ExportDialog = ({
+  isOpen,
+  title,
+  content,
+  setExportContent,
+  setIsDialogOpen,
+}: {
+  isOpen: boolean;
+  title: string;
+  content: string;
+  setExportContent: React.Dispatch<React.SetStateAction<string>>;
+  setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => (
+  <Dialog open={isOpen} onOpenChange={() => setIsDialogOpen(false)}>
+    <DialogContent className="sm:max-w-[425px]">
+      <DialogHeader>
+        <DialogTitle>{`Export ${title}`}</DialogTitle>
+        <DialogDescription>{`Copy the ${title} content below.`}</DialogDescription>
+      </DialogHeader>
+      <textarea
+        readOnly
+        value={content}
+        className="w-full h-40 p-2 border rounded-md"
+      />
+      <Button
+        variant="default"
+        size="sm"
+        onClick={() => {
+          navigator.clipboard.writeText(content);
+          setIsDialogOpen(false);
+        }}
+      >
+        Copy to Clipboard
+      </Button>
+    </DialogContent>
+  </Dialog>
+);
+
+const paletteToCSS = (palette: any) => {
+  return palette
+    .map((color: string, index: number) => `--color-${index}: ${color};`)
+    .join("\n");
+};
 
 export default ConfigPallete;
