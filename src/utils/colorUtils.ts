@@ -64,6 +64,24 @@ export const hexToHsl = (hex: string) => {
   return `hsl(${(h * 360).toFixed(1)}, ${(s * 100).toFixed(1)}%, ${(l * 100).toFixed(1)}%)`;
 };
 
+export const hexToHsb = (hex: string) => {
+  const { r, g, b } = hexToRgb(hex);
+  const rNorm = r / 255;
+  const gNorm = g / 255;
+  const bNorm = b / 255;
+  const max = Math.max(rNorm, gNorm, bNorm);
+  const min = Math.min(rNorm, gNorm, bNorm);
+  const h = max === min ? 0 : max === rNorm
+    ? (gNorm - bNorm) / (max - min) + (gNorm < bNorm ? 6 : 0)
+    : max === gNorm
+    ? (bNorm - rNorm) / (max - min) + 2
+    : (rNorm - gNorm) / (max - min) + 4;
+  const s = max === 0 ? 0 : (max - min) / max;
+  const v = max;
+
+  return `hsb(${Math.round(h * 60)}, ${Math.round(s * 100)}%, ${Math.round(v * 100)}%)`;
+};
+
 export const generateRandomColorFromList = () => {
   const randomIndex = Math.floor(Math.random() * colorNameList.length);
   const { hex, name } = colorNameList[randomIndex];
