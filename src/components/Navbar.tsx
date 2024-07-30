@@ -9,7 +9,7 @@ function Navbar() {
     <nav className=" w-full py-4 dark:border-neutral-800 shadow-sm border dark:border-b-white/20 px-6">
       <div className="flex items-center justify-between">
         <div className="group flex items-center space-x-2 font-medium tracking-[-0.10em] transition-opacity duration-75 ">
-          <h1 className="text-4xl text-transparent bg-clip-text bg-gradient-to-r font-extrabold from-cyan-400 to-lime-400 dark:from-purple-400 dark:to-pink-400">
+          <h1 className="select-none text-4xl text-transparent bg-clip-text bg-gradient-to-r font-extrabold from-cyan-400 to-lime-400 dark:from-purple-400 dark:to-pink-400">
             palette
           </h1>
         </div>
