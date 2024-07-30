@@ -10,10 +10,12 @@ export default function Home() {
       <Navbar />
       <section className="flex justify-between py-5 px-6">
         <GenerateNewPalette />
-        <ConfigPallete />
+        <div className="flex space-x-3 items-center">
+          <ConfigPallete />
+        </div>
       </section>
       <Palette />
-      <footer className="px-6 py-4">
+      <footer className="block xl:hidden px-6 py-4">
         <p className="text-start text-neutral-800 dark:text-white">
           Made by{" "}
           <a target="_blank" href="https://www.andresbr.com/">
