@@ -8,11 +8,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useHover } from "@/context/HoverContext";
 import { useTheme } from "@/context/ThemeConfig";
 
-const ColorFormatOptions = ["HEX", "HLS", "RGB", "CMYK"];
 const ColorOptions = [
   "theme-zinc",
   "theme-slate",
@@ -29,17 +26,8 @@ const ColorOptions = [
 ];
 
 const Configuration = () => {
-  const { setIsHovered, colorFormats, setColorFormats } = useHover();
   const { config, setConfig } = useTheme();
   const { color, radius } = config;
-
-  const handleCheckboxChange = (value: string) => {
-    setColorFormats((prev: string[]) =>
-      prev.includes(value)
-        ? prev.filter((format) => format !== value)
-        : [...prev, value]
-    );
-  };
 
   return (
     <div>
@@ -49,14 +37,9 @@ const Configuration = () => {
             <GearIcon className="h-[1.2rem] w-[1.2rem] group-hover:scale-105 group-hover:rotate-12 duration-200" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80 mr-2">
+        <PopoverContent className="w-80 mr-6">
           <div className="grid gap-4">
             <Header />
-            <ColorFormatSection
-              colorFormats={colorFormats}
-              handleCheckboxChange={handleCheckboxChange}
-              setIsHovered={setIsHovered}
-            />
             <BorderRadiusSection
               borderRadius={radius}
               setBorderRadius={(newRadius: string) =>
@@ -80,40 +63,8 @@ const Header = () => (
   <div className="space-y-2">
     <h4 className="font-medium">Configuration</h4>
     <p className="text-sm text-muted-foreground">
-      Configure the website as you like
+      Configure the palette as you like
     </p>
-  </div>
-);
-
-const ColorFormatSection = ({
-  colorFormats,
-  handleCheckboxChange,
-  setIsHovered,
-}: {
-  colorFormats: string[];
-  handleCheckboxChange: (value: string) => void;
-  setIsHovered: (isHovered: boolean) => void;
-}) => (
-  <div
-    className="grid gap-2"
-    onMouseEnter={() => setIsHovered(true)}
-    onMouseLeave={() => setIsHovered(false)}
-  >
-    <div className="text-sm">
-      <h1 className="mb-2 font-medium">Color Format</h1>
-      <div className="grid grid-cols-2 items-center">
-        {ColorFormatOptions.map((format) => (
-          <div key={format} className="space-x-1 flex items-center">
-            <Checkbox
-              id={`colorFormat${format}`}
-              checked={colorFormats.includes(format)}
-              onCheckedChange={() => handleCheckboxChange(format)}
-            />
-            <label htmlFor={`colorFormat${format}`}>{format}</label>
-          </div>
-        ))}
-      </div>
-    </div>
   </div>
 );
 
