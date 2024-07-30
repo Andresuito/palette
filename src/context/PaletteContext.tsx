@@ -3,17 +3,22 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { generateRandomColorFromList } from "@/utils/colorUtils";
 
+type ColorType = {
+  hex: string;
+  name: string;
+  isPinned: boolean;
+};
+
 type PaletteContextType = {
   isHovered: boolean;
   setIsHovered: (value: boolean) => void;
   colorFormats: string[];
   setColorFormats: React.Dispatch<React.SetStateAction<string[]>>;
   generateAndSaveNewPalette: () => void;
-  colors: { hex: string; name: string; isPinned: boolean }[];
-  setColors: React.Dispatch<
-    React.SetStateAction<{ hex: string; name: string; isPinned: boolean }[]>
-  >;
-  generateNewColor: () => { hex: string; name: string; isPinned: boolean };
+  colors: ColorType[];
+  setColors: React.Dispatch<React.SetStateAction<ColorType[]>>;
+  generateNewColor: () => ColorType;
+  palette: string[];
 };
 
 const PaletteContext = createContext<PaletteContextType | undefined>(undefined);
@@ -29,12 +34,12 @@ export const PaletteProvider: React.FC<{ children: React.ReactNode }> = ({
     }
     return ["HEX"];
   });
-  const [colors, setColors] = useState<
-    { hex: string; name: string; isPinned: boolean }[]
-  >(() => {
+  const [colors, setColors] = useState<ColorType[]>(() => {
     const savedPalette = localStorage.getItem("palette");
     return savedPalette ? JSON.parse(savedPalette) : [];
   });
+
+  const palette = colors.map((color) => color.hex);
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.localStorage) {
@@ -75,6 +80,7 @@ export const PaletteProvider: React.FC<{ children: React.ReactNode }> = ({
         generateNewColor,
         colors,
         setColors,
+        palette,
       }}
     >
       {children}
