@@ -8,6 +8,7 @@ import "./globals.css";
 import { toast } from "sonner";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://palette.andresbr.com"),
   title: {
     default: "Palette",
     template: "%s | Palette",
