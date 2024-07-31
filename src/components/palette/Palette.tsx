@@ -16,9 +16,17 @@ import {
   hexToHsb,
   hexToRgb,
   getTextColor,
+  findClosestColorName, // Cambiar el nombre a findClosestColorName
 } from "@/utils/colorUtils";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import Header from "@/components/Header";
 import { usePalette } from "@/context/PaletteContext";
 import { toast } from "sonner";
+import { PaintBucket } from "lucide-react";
 
 const Spinner = () => (
   <div className="flex justify-center items-center h-full">
@@ -39,12 +47,26 @@ function Palette() {
   const [removingColorIndex, setRemovingColorIndex] = useState<number | null>(
     null
   );
+  const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(
+    null
+  );
+  const [inputColor, setInputColor] = useState<string>("#ffffff");
+  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(
+    null
+  );
 
   useEffect(() => {
     if (colors.length === 0) {
       generateAndSaveNewPalette();
     }
   }, [generateAndSaveNewPalette, colors.length]);
+
+  useEffect(() => {
+    if (selectedColorIndex !== null) {
+      const selectedColor = colors[selectedColorIndex];
+      setInputColor(selectedColor.hex);
+    }
+  }, [selectedColorIndex, colors]);
 
   const handlePinClick = (index: number) => {
     const newColors = colors.map((color, i) =>
@@ -83,6 +105,39 @@ function Palette() {
       CMYK: hexToCmyk(hex),
     };
     return colorFormats.map((format) => formats[format]);
+  };
+
+  const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newColor = event.target.value;
+    setInputColor(newColor);
+
+    if (selectedColorIndex !== null) {
+      const newColors = colors.map((color, index) =>
+        index === selectedColorIndex ? { ...color, hex: newColor } : color
+      );
+      setColors(newColors);
+      localStorage.setItem("palette", JSON.stringify(newColors));
+    }
+
+    // Clear previous debounce timer
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
+
+    // Set new debounce timer
+    setDebounceTimer(
+      setTimeout(() => {
+        if (selectedColorIndex !== null) {
+          const newColors = colors.map((color, index) =>
+            index === selectedColorIndex
+              ? { ...color, name: findClosestColorName(newColor) }
+              : color
+          );
+          setColors(newColors);
+          localStorage.setItem("palette", JSON.stringify(newColors));
+        }
+      }, 1000)
+    );
   };
 
   if (colors.length === 0) {
@@ -157,6 +212,34 @@ function Palette() {
                   )}`}
                 />
               </Button>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="icon"
+                    size="icon"
+                    className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
+                    onClick={() => setSelectedColorIndex(index)}
+                  >
+                    <PaintBucket
+                      className={`h-[1.0rem] w-[1.0rem] ${getTextColorClass(
+                        color.hex
+                      )}`}
+                    />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent align="center" className="w-fit p-5 mr-6">
+                  <Header
+                    title="Pick a color"
+                    description="Pick a new color silly"
+                  />
+                  <input
+                    type="color"
+                    value={inputColor}
+                    onChange={handleColorChange}
+                    className="mt-4"
+                  />
+                </PopoverContent>
+              </Popover>
               <Button
                 variant="icon"
                 size="icon"
