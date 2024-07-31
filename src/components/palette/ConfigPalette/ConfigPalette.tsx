@@ -13,7 +13,9 @@ import ColorFormatSection from "./ColorFormatSection";
 import ExportColors from "./ExportColors";
 import ExportDialog from "./ExportDialog";
 import Header from "@/components/Header";
-import { generatePaletteImage, paletteToCSS } from "@/utils/canvaGenerator";
+import { generatePaletteImage } from "@/utils/canvaGenerator";
+import { paletteToCSS } from "@/utils/formatCSS";
+import { generatePalettePDF } from "@/utils/pdfGenerator";
 
 function ConfigPalette() {
   const { setIsHovered, colorFormats, setColorFormats, palette } = usePalette();
@@ -30,15 +32,22 @@ function ConfigPalette() {
     );
   };
 
-  const handleExport = (format: string) => {
+  const handleExport = async (format: string) => {
     if (format === "CSS") {
-      setExportTitle(format);
+      setExportTitle("CSS");
       setExportContent(paletteToCSS(palette));
       setIsDialogOpen(true);
     } else if (format === "IMAGE") {
       const imageURL = generatePaletteImage(palette, canvasRef.current);
       setExportTitle("Image");
       setExportContent(imageURL);
+      setIsDialogOpen(true);
+    } else if (format === "PDF") {
+      setExportTitle("PDF");
+      const pdfData = await generatePalettePDF(palette);
+      const pdfBlob = new Blob([pdfData], { type: "application/pdf" });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      setExportContent(pdfUrl);
       setIsDialogOpen(true);
     }
   };
