@@ -23,7 +23,8 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-import Header from "@/components/Header";
+import { HexColorPicker } from "react-colorful";
+import { Input } from "../ui/input";
 import { usePalette } from "@/context/PaletteContext";
 import { toast } from "sonner";
 import { PaintBucket } from "lucide-react";
@@ -92,7 +93,7 @@ function Palette() {
       } else {
         localStorage.setItem("palette", JSON.stringify(newColors));
       }
-    }, 300); // Duration of the animation
+    }, 300);
   };
 
   const getColorFormats = (hex: string) => {
@@ -107,8 +108,7 @@ function Palette() {
     return colorFormats.map((format) => formats[format]);
   };
 
-  const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newColor = event.target.value;
+  const handleColorChange = (newColor: string) => {
     setInputColor(newColor);
 
     if (selectedColorIndex !== null) {
@@ -119,12 +119,10 @@ function Palette() {
       localStorage.setItem("palette", JSON.stringify(newColors));
     }
 
-    // Clear previous debounce timer
     if (debounceTimer) {
       clearTimeout(debounceTimer);
     }
 
-    // Set new debounce timer
     setDebounceTimer(
       setTimeout(() => {
         if (selectedColorIndex !== null) {
@@ -136,7 +134,7 @@ function Palette() {
           setColors(newColors);
           localStorage.setItem("palette", JSON.stringify(newColors));
         }
-      }, 1000)
+      }, 500)
     );
   };
 
@@ -227,17 +225,22 @@ function Palette() {
                     />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent align="center" className="w-fit p-5 mr-6">
-                  <Header
-                    title="Pick a color"
-                    description="Pick a new color silly"
-                  />
-                  <input
-                    type="color"
-                    value={inputColor}
+                <PopoverContent align="center" className="w-fit p-4">
+                  <HexColorPicker
+                    color={inputColor}
                     onChange={handleColorChange}
-                    className="mt-4"
                   />
+                  <div className="relative">
+                    <Input
+                      value={inputColor}
+                      onChange={(e) => handleColorChange(e.target.value)}
+                      className="mt-4 relative"
+                    />
+                    <div
+                      className="top-1.5 right-2 absolute size-5 rounded-full"
+                      style={{ backgroundColor: inputColor }}
+                    ></div>
+                  </div>
                 </PopoverContent>
               </Popover>
               <Button
