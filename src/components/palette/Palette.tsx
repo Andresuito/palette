@@ -16,7 +16,7 @@ import {
   hexToHsb,
   hexToRgb,
   getTextColor,
-  findClosestColorName, // Cambiar el nombre a findClosestColorName
+  findClosestColorName,
 } from "@/utils/colorUtils";
 import {
   Popover,
