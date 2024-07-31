@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
+import Header from "@/components/Header";
 import { GearIcon } from "@radix-ui/react-icons";
 import {
   Popover,
@@ -39,7 +40,10 @@ const Configuration = () => {
         </PopoverTrigger>
         <PopoverContent className="w-80 mr-6">
           <div className="grid gap-4">
-            <Header />
+            <Header
+              title="Configuration"
+              description="Customize the settings for the entire page to suit your preferences."
+            />
             <BorderRadiusSection
               borderRadius={radius}
               setBorderRadius={(newRadius: string) =>
@@ -58,15 +62,6 @@ const Configuration = () => {
     </div>
   );
 };
-
-const Header = () => (
-  <div className="space-y-2">
-    <h4 className="font-medium">Configuration</h4>
-    <p className="text-sm text-muted-foreground">
-      Configure the palette as you like
-    </p>
-  </div>
-);
 
 const BorderRadiusSection = ({
   borderRadius,

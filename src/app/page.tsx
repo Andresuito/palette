@@ -1,8 +1,8 @@
 import React from "react";
 import Navbar from "@/components/Navbar";
-import ConfigPallete from "@/components/pallete/ConfigPalette";
-import Palette from "@/components/pallete/Palette";
-import GenerateNewPalette from "@/components/pallete/GenerateNewPalette";
+import ConfigPallete from "@/components/palette/ConfigPalette/ConfigPalette";
+import Palette from "@/components/palette/Palette";
+import GenerateNewPalette from "@/components/palette/GenerateNewPalette";
 
 export default function Home() {
   return (
