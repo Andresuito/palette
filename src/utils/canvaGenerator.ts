@@ -36,9 +36,3 @@ export const generatePaletteImage = (
 
   return canvas.toDataURL();
 };
-
-export const paletteToCSS = (palette: string[]) => {
-  return palette
-    .map((color, index) => `--color-${index}: ${color};`)
-    .join("\n");
-};
