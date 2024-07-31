@@ -15,7 +15,7 @@ export async function generatePalettePDF(palette: string[]): Promise<Uint8Array>
 
   const drawTitle = () => {
     doc.setFontSize(titleFontSize);
-    doc.text('Palette', margin, margin + titleFontSize);
+    doc.text('pal', margin, margin + titleFontSize);
     doc.setFontSize(textFontSize);
   };
 
