@@ -1,5 +1,5 @@
 import React from "react";
-import Configuration from "./config/Configuration";
+import Configuration from "./webconfig/Configuration";
 import { ModeToggle } from "./ModeToggle";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Button } from "./ui/button";
