@@ -700,3 +700,31 @@
   transition: flex 0.3s ease-out;
   flex-grow: 1;
 }
+
+/* ColorPicker */
+.react-colorful {
+  width: 100% !important;
+}
+
+.react-colorful__alpha-gradient,
+.react-colorful__saturation {
+  margin-bottom: 10px !important;
+}
+
+.react-colorful__saturation {
+  border-radius: 10px !important;
+}
+
+.react-colorful__alpha,
+.react-colorful__hue {
+  height: 10px !important;
+}
+
+.react-colorful__pointer {
+  max-width: 20px;
+  max-height: 20px;
+}
+
+.react-colorful__last-control {
+  border-radius: 10px !important;
+}
