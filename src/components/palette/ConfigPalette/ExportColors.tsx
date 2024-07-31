@@ -48,7 +48,7 @@ const ExportColors = ({
               <Image className="h-[1.3rem] w-[1.3rem] mr-1" />
               Image
             </Button>
-            <Button>
+            <Button onClick={() => handleExport("PDF")}>
               <FileText className="h-[1.3rem] w-[1.3rem] mr-1" />
               PDF
             </Button>
