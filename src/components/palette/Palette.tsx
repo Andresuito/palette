@@ -260,37 +260,39 @@ function Palette() {
                 />
               </Button>
             </div>
-            <h1
-              className={`text-2xl text-center font-semibold select-none ${getTextColorClass(
-                color.hex
-              )}`}
-            >
-              {color.name}
-            </h1>
-            <div
-              className={`flex flex-col items-center space-y-1 text-center px-2 rounded-md transition-all duration-300 ease-in-out ${
-                isHovered
-                  ? "border-2 border-red-500"
-                  : "border-2 border-transparent"
-              }`}
-            >
-              {getColorFormats(color.hex).map((format, i) => (
-                <p
-                  key={i}
-                  onClick={() => {
-                    navigator.clipboard.writeText(format);
-                    toast.success("Text copied to clipboard!", {
-                      duration: 1500,
-                      description: `Copied format: ${format}`,
-                    });
-                  }}
-                  className={`cursor-pointer text-lg uppercase select-none ${getTextColorClass(
-                    color.hex
-                  )}`}
-                >
-                  {format}
-                </p>
-              ))}
+            <div className="flex sm:flex-col">
+              <h1
+                className={`text-2xl text-center font-semibold select-none ${getTextColorClass(
+                  color.hex
+                )}`}
+              >
+                {color.name}
+              </h1>
+              <div
+                className={`flex flex-col items-center space-y-1 text-center px-2 rounded-md transition-all duration-300 ease-in-out ${
+                  isHovered
+                    ? "border-2 border-red-500"
+                    : "border-2 border-transparent"
+                }`}
+              >
+                {getColorFormats(color.hex).map((format, i) => (
+                  <p
+                    key={i}
+                    onClick={() => {
+                      navigator.clipboard.writeText(format);
+                      toast.success("Text copied to clipboard!", {
+                        duration: 1500,
+                        description: `Copied format: ${format}`,
+                      });
+                    }}
+                    className={`cursor-pointer text-lg uppercase select-none ${getTextColorClass(
+                      color.hex
+                    )}`}
+                  >
+                    {format}
+                  </p>
+                ))}
+              </div>
             </div>
           </div>
         ))}
