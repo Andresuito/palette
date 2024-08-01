@@ -35,6 +35,9 @@ const Spinner = () => (
   </div>
 );
 
+const isValidHex = (hex: string) => /^#[0-9A-F]{6}$/i.test(hex);
+const isPartialHex = (hex: string) => /^#[0-9A-F]{0,6}$/i.test(hex);
+
 function Palette() {
   const {
     isHovered,
@@ -109,14 +112,8 @@ function Palette() {
   };
 
   const handleColorChange = (newColor: string) => {
-    setInputColor(newColor);
-
-    if (selectedColorIndex !== null) {
-      const newColors = colors.map((color, index) =>
-        index === selectedColorIndex ? { ...color, hex: newColor } : color
-      );
-      setColors(newColors);
-      localStorage.setItem("palette", JSON.stringify(newColors));
+    if (isPartialHex(newColor)) {
+      setInputColor(newColor);
     }
 
     if (debounceTimer) {
@@ -125,14 +122,20 @@ function Palette() {
 
     setDebounceTimer(
       setTimeout(() => {
-        if (selectedColorIndex !== null) {
-          const newColors = colors.map((color, index) =>
-            index === selectedColorIndex
-              ? { ...color, name: findClosestColorName(newColor) }
-              : color
-          );
-          setColors(newColors);
-          localStorage.setItem("palette", JSON.stringify(newColors));
+        if (isValidHex(newColor)) {
+          if (selectedColorIndex !== null) {
+            const newColors = colors.map((color, index) =>
+              index === selectedColorIndex
+                ? {
+                    ...color,
+                    hex: newColor,
+                    name: findClosestColorName(newColor),
+                  }
+                : color
+            );
+            setColors(newColors);
+            localStorage.setItem("palette", JSON.stringify(newColors));
+          }
         }
       }, 500)
     );
