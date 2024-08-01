@@ -10,7 +10,7 @@ export const hexToCmyk = (hex: string) => {
   const m = (1 - g - k) / (1 - k) || 0;
   const y = (1 - b - k) / (1 - k) || 0;
 
-  return `cmyk(${(c * 100).toFixed(1)}%, ${(m * 100).toFixed(1)}%, ${(y * 100).toFixed(1)}%, ${(k * 100).toFixed(1)}%)`;
+  return `cmyk(${(c * 100).toFixed(1)}, ${(m * 100).toFixed(1)}, ${(y * 100).toFixed(1)}, ${(k * 100).toFixed(1)})`;
 };
 
 
@@ -53,7 +53,7 @@ export const hexToHsl = (hex: string) => {
     h /= 6;
   }
 
-  return `hsl(${(h * 360).toFixed(1)}, ${(s * 100).toFixed(1)}%, ${(l * 100).toFixed(1)}%)`;
+  return `hsl(${(h * 360).toFixed(1)}, ${(s * 100).toFixed(1)}, ${(l * 100).toFixed(1)})`;
 };
 
 
@@ -72,7 +72,7 @@ export const hexToHsb = (hex: string) => {
   const s = max === 0 ? 0 : (max - min) / max;
   const v = max;
 
-  return `hsb(${Math.round(h * 60)}, ${Math.round(s * 100)}%, ${Math.round(v * 100)}%)`;
+  return `hsb(${Math.round(h * 60)}, ${Math.round(s * 100)}, ${Math.round(v * 100)})`;
 };
 
 
