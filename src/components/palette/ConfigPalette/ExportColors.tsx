@@ -18,7 +18,7 @@ const ExportColors = ({
   <div>
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="default" size="sm">
+        <Button variant="outline" size="sm">
           Export
           <Share1Icon className="ml-2 h-[1.1rem] w-[1.1rem] group-hover:scale-105 group-hover:rotate-12 duration-200" />
         </Button>
@@ -30,7 +30,11 @@ const ExportColors = ({
             description="Select the desired format to export your palette. Multiple formats can be applied simultaneously."
           />
           <div className="grid grid-cols-2 gap-2">
-            <Button onClick={() => handleExport("CSS")}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => handleExport("CSS")}
+            >
               <svg
                 className="h-[1.3rem] w-[1.3rem] mr-1 dark:text-white"
                 aria-hidden="true"
@@ -44,11 +48,19 @@ const ExportColors = ({
               </svg>
               CSS
             </Button>
-            <Button onClick={() => handleExport("IMAGE")}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => handleExport("IMAGE")}
+            >
               <Image className="h-[1.3rem] w-[1.3rem] mr-1" />
               Image
             </Button>
-            <Button onClick={() => handleExport("PDF")}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => handleExport("PDF")}
+            >
               <FileText className="h-[1.3rem] w-[1.3rem] mr-1" />
               PDF
             </Button>

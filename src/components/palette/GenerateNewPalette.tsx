@@ -9,7 +9,7 @@ function GenerateNewPalette() {
 
   return (
     <div>
-      <Button size="sm" variant="default" onClick={generateAndSaveNewPalette}>
+      <Button variant="outline" onClick={generateAndSaveNewPalette}>
         Generate New Palette
       </Button>
     </div>

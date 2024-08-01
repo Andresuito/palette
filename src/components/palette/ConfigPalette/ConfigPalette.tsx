@@ -56,7 +56,7 @@ function ConfigPalette() {
     <div className="flex space-x-3 items-center">
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="default" className="group" size="sm">
+          <Button variant="outline" className="group" size="sm">
             <Palette className="h-[1.1rem] w-[1.1rem] group-hover:scale-105 group-hover:rotate-12 duration-200" />
           </Button>
         </PopoverTrigger>

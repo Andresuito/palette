@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { PaletteProvider } from "@/context/PaletteContext";
 import { Toaster } from "@/components/ui/sonner";
-import { ThemeConfigProvider } from "@/context/ThemeConfig";
 import { ThemeProvider } from "@/components/theme-provider";
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
-import { toast } from "sonner";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://palette.andresbr.com"),
@@ -69,8 +67,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`h-screen antialiased ${GeistSans.className} theme-neutral`}
-        style={{ "--radius": "0.5rem" } as React.CSSProperties}
+        className={`h-screen antialiased ${GeistSans.className} bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-50`}
       >
         <ThemeProvider
           attribute="class"
@@ -78,19 +75,17 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <ThemeConfigProvider>
-            <PaletteProvider>
-              {children}{" "}
-              <Toaster
-                toastOptions={{
-                  unstyled: false,
-                  classNames: {
-                    toast: "toaster-radius",
-                  },
-                }}
-              />
-            </PaletteProvider>
-          </ThemeConfigProvider>
+          <PaletteProvider>
+            {children}{" "}
+            <Toaster
+              toastOptions={{
+                unstyled: false,
+                classNames: {
+                  toast: "toaster-radius",
+                },
+              }}
+            />
+          </PaletteProvider>
         </ThemeProvider>
       </body>
     </html>

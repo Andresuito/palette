@@ -1,5 +1,4 @@
 import React from "react";
-import Configuration from "./webconfig/Configuration";
 import { ModeToggle } from "./ModeToggle";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Button } from "./ui/button";
@@ -14,9 +13,6 @@ function Navbar() {
           </h1>
         </div>
         <ul className="space-x-2 flex">
-          <li>
-            <Configuration />
-          </li>
           <li>
             <a
               href="https://github.com/Andresuito/palette"
