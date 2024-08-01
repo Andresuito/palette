@@ -712,7 +712,7 @@
 }
 
 .react-colorful__saturation {
-  border-radius: 10px !important;
+  border-radius: var(--radius) !important;
 }
 
 .react-colorful__alpha,
@@ -726,5 +726,5 @@
 }
 
 .react-colorful__last-control {
-  border-radius: 10px !important;
+  border-radius: var(--radius) !important;
 }
