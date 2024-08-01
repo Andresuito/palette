@@ -29,8 +29,7 @@ export const PaletteProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isHovered, setIsHovered] = useState(false);
   const [colorFormats, setColorFormats] = useState<string[]>(["HEX"]);
   const [colors, setColors] = useState<ColorType[]>([]);
-
-  const palette = colors.map((color) => color.hex);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.localStorage) {
@@ -38,12 +37,16 @@ export const PaletteProvider: React.FC<{ children: React.ReactNode }> = ({
       if (savedColorFormats) {
         setColorFormats(JSON.parse(savedColorFormats));
       }
+
       const savedPalette = localStorage.getItem("palette");
       if (savedPalette) {
         setColors(JSON.parse(savedPalette));
       }
+      setIsLoaded(true);
     }
   }, []);
+
+  const palette = colors.map((color) => color.hex);
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.localStorage) {
@@ -51,13 +54,9 @@ export const PaletteProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [colorFormats]);
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.localStorage) {
-      localStorage.setItem("palette", JSON.stringify(colors));
-    }
-  }, [colors]);
-
   const generateAndSaveNewPalette = () => {
+    if (!isLoaded) return;
+
     const updatedPalette = colors.map((color) =>
       color.isPinned
         ? color
@@ -72,6 +71,9 @@ export const PaletteProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     setColors(updatedPalette);
+    if (typeof window !== "undefined" && window.localStorage) {
+      localStorage.setItem("palette", JSON.stringify(updatedPalette));
+    }
   };
 
   const generateNewColor = () => {
