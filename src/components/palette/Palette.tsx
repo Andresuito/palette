@@ -10,6 +10,8 @@ import {
 } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import {
+  isValidHex,
+  isPartialHex,
   hexToRgba,
   hexToHsl,
   hexToCmyk,
@@ -28,15 +30,7 @@ import { Input } from "../ui/input";
 import { usePalette } from "@/context/PaletteContext";
 import { toast } from "sonner";
 import { PaintBucket } from "lucide-react";
-
-const Spinner = () => (
-  <div className="flex justify-center items-center h-full">
-    <div className="animate-spin rounded-full size-20 border-t-4 border-black dark:border-white"></div>
-  </div>
-);
-
-const isValidHex = (hex: string) => /^#[0-9A-F]{6}$/i.test(hex);
-const isPartialHex = (hex: string) => /^#[0-9A-F]{0,6}$/i.test(hex);
+import Spinner from "./Spinner";
 
 function Palette() {
   const {
@@ -269,7 +263,7 @@ function Palette() {
                 {color.name}
               </h1>
               <div
-                className={`flex flex-col items-center space-y-1 text-center px-2 rounded-md transition-all duration-300 ease-in-out ${
+                className={`flex flex-col items-center space-y-1 mx-auto justify-center text-center px-2 rounded-md transition-all duration-300 ease-in-out ${
                   isHovered
                     ? "border-2 border-red-500"
                     : "border-2 border-transparent"
