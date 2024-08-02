@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Palette, FileText } from "lucide-react";
+import { Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePalette } from "@/context/PaletteContext";
 import {
@@ -32,23 +32,32 @@ function ConfigPalette() {
     );
   };
 
-  const handleExport = async (format: string) => {
-    if (format === "CSS") {
+  const exportHandlers: { [key: string]: () => Promise<void> } = {
+    CSS: async () => {
       setExportTitle("CSS");
       setExportContent(paletteToCSS(palette));
       setIsDialogOpen(true);
-    } else if (format === "IMAGE") {
+    },
+    IMAGE: async () => {
       const imageURL = generatePaletteImage(palette, canvasRef.current);
       setExportTitle("Image");
       setExportContent(imageURL);
       setIsDialogOpen(true);
-    } else if (format === "PDF") {
-      setExportTitle("PDF");
+    },
+    PDF: async () => {
       const pdfData = await generatePalettePDF(palette);
       const pdfBlob = new Blob([pdfData], { type: "application/pdf" });
       const pdfUrl = URL.createObjectURL(pdfBlob);
+      setExportTitle("PDF");
       setExportContent(pdfUrl);
       setIsDialogOpen(true);
+    },
+  };
+
+  const handleExport = async (format: string) => {
+    const handler = exportHandlers[format];
+    if (handler) {
+      await handler();
     }
   };
 
