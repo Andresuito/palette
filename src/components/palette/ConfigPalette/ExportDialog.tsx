@@ -64,7 +64,13 @@ const ExportDialog = ({
             <Button
               variant="default"
               size="sm"
-              onClick={handleDownloadPDF}
+              onClick={() => {
+                handleDownloadPDF();
+                setIsDialogOpen(false);
+                toast.success("File downloaded successfully!", {
+                  duration: 1500,
+                });
+              }}
               className="mt-4"
             >
               Download PDF
@@ -84,7 +90,7 @@ const ExportDialog = ({
                 onClick={() => {
                   handleDownloadCSS();
                   setIsDialogOpen(false);
-                  toast.success("Text copied to clipboard!", {
+                  toast.success("File downloaded successfully! ", {
                     duration: 1500,
                   });
                 }}
@@ -119,6 +125,9 @@ const ExportDialog = ({
               link.download = "palette.png";
               link.click();
               setIsDialogOpen(false);
+              toast.success("Image downloaded successfully!", {
+                duration: 1500,
+              });
             }}
             className="mt-4"
           >
