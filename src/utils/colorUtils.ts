@@ -1,5 +1,8 @@
 import colorNameList from "color-name-list";
 
+export const isValidHex = (hex: string) => /^#[0-9A-F]{6}$/i.test(hex);
+export const isPartialHex = (hex: string) => /^#[0-9A-F]{0,6}$/i.test(hex);
+
 export const hexToCmyk = (hex: string) => {
   const r = parseInt(hex.slice(1, 3), 16) / 255;
   const g = parseInt(hex.slice(3, 5), 16) / 255;
