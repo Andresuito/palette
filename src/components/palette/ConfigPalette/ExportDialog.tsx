@@ -57,6 +57,7 @@ const ExportDialog = ({
         ) : title === "PDF" ? (
           <>
             <iframe
+              className="hidden lg:flex"
               src={content}
               style={{ width: "100%", height: "60vh", border: "none" }}
               title="PDF Preview"
