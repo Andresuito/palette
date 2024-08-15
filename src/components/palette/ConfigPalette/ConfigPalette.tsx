@@ -18,7 +18,7 @@ import { paletteToCSS } from "@/utils/formatCSS";
 import { generatePalettePDF } from "@/utils/pdfGenerator";
 
 function ConfigPalette() {
-  const { setIsHovered, colorFormats, setColorFormats, palette } = usePalette();
+  const { setIsHovered, colorFormats, setColorFormats, colors } = usePalette();
   const [exportContent, setExportContent] = useState<string>("");
   const [exportTitle, setExportTitle] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
@@ -35,17 +35,26 @@ function ConfigPalette() {
   const exportHandlers: { [key: string]: () => Promise<void> } = {
     CSS: async () => {
       setExportTitle("CSS");
-      setExportContent(paletteToCSS(palette));
+      setExportContent(paletteToCSS(colors.map((color) => color.hex)));
       setIsDialogOpen(true);
     },
     IMAGE: async () => {
-      const imageURL = generatePaletteImage(palette, canvasRef.current);
-      setExportTitle("Image");
-      setExportContent(imageURL);
-      setIsDialogOpen(true);
+      if (canvasRef.current) {
+        const imageURL = generatePaletteImage(
+          colors,
+          canvasRef.current,
+          colorFormats
+        );
+        setExportTitle("Image");
+        setExportContent(imageURL);
+        setIsDialogOpen(true);
+      }
     },
     PDF: async () => {
-      const pdfData = await generatePalettePDF(palette);
+      const pdfData = await generatePalettePDF(
+        colors.map((color) => ({ hex: color.hex, name: color.name })),
+        colorFormats
+      );
       const pdfBlob = new Blob([pdfData], { type: "application/pdf" });
       const pdfUrl = URL.createObjectURL(pdfBlob);
       setExportTitle("PDF");
