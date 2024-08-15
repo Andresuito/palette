@@ -177,7 +177,9 @@ const ColorCard: React.FC<ColorCardProps> = ({ color, index }) => {
         <Button
           variant="icon"
           size="icon"
-          className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
+          className={`opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out ${
+            color.isPinned ? "opacity-100" : ""
+          }`}
         >
           <ShadowIcon
             className={`h-[1.0rem] w-[1.0rem] ${getTextColorClass(color.hex)}`}
@@ -188,7 +190,9 @@ const ColorCard: React.FC<ColorCardProps> = ({ color, index }) => {
             <Button
               variant="icon"
               size="icon"
-              className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
+              className={`opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out ${
+                color.isPinned ? "opacity-100" : ""
+              }`}
               onClick={() => setSelectedColorIndex(index)}
             >
               <PaintBucket
