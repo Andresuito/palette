@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   DrawingPinIcon,
   DrawingPinFilledIcon,
@@ -49,10 +49,16 @@ const ColorCard: React.FC<ColorCardProps> = ({ color, index }) => {
   const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(
     null
   );
-  const [inputColor, setInputColor] = useState<string>("#ffffff");
+  const [inputColor, setInputColor] = useState<string>(color.hex); // Initialize with color.hex
   const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(
     null
   );
+
+  useEffect(() => {
+    if (selectedColorIndex === index) {
+      setInputColor(color.hex);
+    }
+  }, [color.hex, selectedColorIndex, index]);
 
   const handlePinClick = (index: number) => {
     const newColors = colors.map((color, i) =>
@@ -229,7 +235,7 @@ const ColorCard: React.FC<ColorCardProps> = ({ color, index }) => {
           />
         </Button>
       </div>
-      <div className="flex sm:flex-col">
+      <div className="flex-row py-10 xl:py-0">
         <h1
           className={`text-2xl text-center font-semibold select-none ${getTextColorClass(
             color.hex
