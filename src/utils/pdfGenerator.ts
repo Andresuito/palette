@@ -2,23 +2,27 @@ import jsPDF from 'jspdf';
 import { hexToRgb, hexToRgba, hexToHsl, hexToHsb, hexToCmyk } from './colorUtils';
 
 export async function generatePalettePDF(palette: { hex: string; name: string }[], formats: string[]): Promise<Uint8Array> {
-  const doc = new jsPDF('l', 'mm', 'a4');
-  const boxWidth = 60;
-  const boxHeight = 60;
-  const margin = 15;
+  const boxWidth = 80;
+  const boxHeight = 80;
+  const margin = 30;
   const borderRadius = 4;
-  const pageHeight = doc.internal.pageSize.height;
   const titleFontSize = 18;
   const textFontSize = 12;
-  const lineHeight = 8;
+  const lineHeight = 10;
+  const initialY = margin + titleFontSize + 20;
+
+  const totalHeight = initialY + palette.length * (boxHeight + margin);
+
+  const doc = new jsPDF('l', 'mm', [totalHeight, 600]);
+
   let x = margin;
-  let y = margin + titleFontSize + 20;
+  let y = initialY;
 
   const drawTitle = () => {
     doc.setFontSize(titleFontSize);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(0, 0, 0);
-    doc.text('palette', margin, margin + titleFontSize);
+    doc.text('Palette', margin, margin + titleFontSize);
     doc.setFontSize(textFontSize);
     doc.setFont("helvetica", "normal");
   };
@@ -51,14 +55,11 @@ export async function generatePalettePDF(palette: { hex: string; name: string }[
       formatsY += lineHeight;
     });
 
-    y += Math.max(boxHeight, formatsY - y) + margin;
+    y += boxHeight + margin;
+  });
 
-    if (y + boxHeight > pageHeight - margin) {
-      doc.addPage();
-      x = margin;
-      y = margin + titleFontSize + 20;
-      drawTitle();
-    }
+  doc.setProperties({
+    title: 'palette',
   });
 
   return doc.output('arraybuffer') as unknown as Uint8Array;
