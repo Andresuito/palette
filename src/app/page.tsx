@@ -2,6 +2,7 @@ import React from "react";
 import ConfigPallete from "@/components/palette/ConfigPalette/ConfigPalette";
 import Palette from "@/components/palette/Palette";
 import GenerateNewPalette from "@/components/palette/GenerateNewPalette";
+import Navbar from "@/components/Navbar";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
         </div>
       </section>
       <Palette />
+      <Navbar />
     </main>
   );
 }
