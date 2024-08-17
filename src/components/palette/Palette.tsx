@@ -19,7 +19,7 @@ function Palette() {
   }
 
   return (
-    <section className="flex flex-col xl:flex-row gap-5 h-[75%] xl:h-[80%] px-6">
+    <section className="flex flex-col xl:flex-row gap-5 h-[75%] xl:h-[90%] px-6">
       {colors.map((color, index) => (
         <ColorCard key={index} color={color} index={index} />
       ))}
