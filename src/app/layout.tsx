@@ -76,7 +76,6 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <Navbar />
           <PaletteProvider>
             {children}{" "}
             <Toaster
@@ -88,6 +87,7 @@ export default function RootLayout({
               }}
             />
           </PaletteProvider>
+          <Navbar />
         </ThemeProvider>
       </body>
     </html>
