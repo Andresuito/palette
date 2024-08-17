@@ -71,7 +71,7 @@ function ConfigPalette() {
   };
 
   return (
-    <div className="flex space-x-3 items-center">
+    <div className="flex space-x-1 items-center">
       <Popover>
         <PopoverTrigger asChild>
           <Button variant="outline" className="group" size="sm">
