@@ -49,7 +49,7 @@ const ColorCard: React.FC<ColorCardProps> = ({ color, index }) => {
   const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(
     null
   );
-  const [inputColor, setInputColor] = useState<string>(color.hex); // Initialize with color.hex
+  const [inputColor, setInputColor] = useState<string>(color.hex);
   const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(
     null
   );
