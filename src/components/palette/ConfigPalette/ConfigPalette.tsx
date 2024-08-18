@@ -97,7 +97,6 @@ function ConfigPalette() {
         isOpen={isDialogOpen}
         title={exportTitle}
         content={exportContent}
-        setExportContent={setExportContent}
         setIsDialogOpen={setIsDialogOpen}
       />
       <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
