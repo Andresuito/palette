@@ -1,8 +1,9 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ConfigPallete from "@/components/palette/ConfigPalette/ConfigPalette";
 import Palette from "@/components/palette/Palette";
 import GenerateNewPalette from "@/components/palette/GenerateNewPalette";
 import Navbar from "@/components/Navbar";
+import Spinner from "@/components/palette/Spinner";
 
 export default function Home() {
   return (
@@ -13,7 +14,9 @@ export default function Home() {
           <ConfigPallete />
         </div>
       </section>
-      <Palette />
+      <Suspense fallback={<Spinner />}>
+        <Palette />
+      </Suspense>
       <Navbar />
     </main>
   );
