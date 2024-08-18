@@ -13,13 +13,11 @@ const ExportDialog = ({
   isOpen,
   title,
   content,
-  setExportContent,
   setIsDialogOpen,
 }: {
   isOpen: boolean;
   title: string;
   content: string;
-  setExportContent: React.Dispatch<React.SetStateAction<string>>;
   setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const handleDownloadPDF = () => {
