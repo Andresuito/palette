@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://www.palette.andresbr.com"><img src="/public/android-chrome-192x192.png" alt="Palette Generator" width="140"></a>
+  <a href="palette.andresbr.com"><img src="/public/android-chrome-192x192.png" alt="Palette Generator" width="140"></a>
   <br>
   palette.andresbr.com
   <br>
