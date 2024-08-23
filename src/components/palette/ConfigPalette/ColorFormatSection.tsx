@@ -1,5 +1,6 @@
 import React from "react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 const ColorFormatOptions = ["HEX", "HSL", "RGB", "RGBA", "CMYK", "HSB"];
 
@@ -13,21 +14,23 @@ const ColorFormatSection = ({
   setIsHovered: (isHovered: boolean) => void;
 }) => (
   <div
-    className="grid gap-2"
     onMouseEnter={() => setIsHovered(true)}
     onMouseLeave={() => setIsHovered(false)}
   >
     <div className="text-sm">
-      <h1 className="mb-2 font-medium">Color Format</h1>
-      <div className="grid grid-cols-2 items-center">
+      <h1 className="mb-4 text-lg font-semibold">Color Format</h1>
+      <div className="grid grid-cols-2 gap-2 items-center">
         {ColorFormatOptions.map((format) => (
-          <div key={format} className="space-x-1 flex items-center">
+          <div key={format} className="flex items-center space-x-1">
             <Checkbox
-              id={`colorFormat${format}`}
+              id={`${format}`}
               checked={colorFormats.includes(format)}
               onCheckedChange={() => handleCheckboxChange(format)}
+              aria-labelledby={`label-${format}`}
             />
-            <label htmlFor={`colorFormat${format}`}>{format}</label>
+            <Label id={`label-${format}`} htmlFor={`${format}`}>
+              {format}
+            </Label>
           </div>
         ))}
       </div>
