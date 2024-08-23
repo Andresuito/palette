@@ -11,28 +11,20 @@ export const metadata: Metadata = {
     default: "Palette",
     template: "%s | Palette",
   },
-  robots: {
-    index: true,
-    follow: true,
-    nocache: true,
-    googleBot: {
-      index: true,
-      follow: false,
-      noimageindex: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
+  robots: "follow, index",
+  category: "Design",
+  creator: "Andres B.R",
+
   keywords: ["palette", "color", "design", "developer", "scheme"],
   description:
     "Discover and create beautiful color schemes for your projects. Perfect for designers and developers.",
   openGraph: {
+    type: "website",
     title: "Palette",
+    locale: "en_US",
     description:
       "Discover and create beautiful color schemes for your projects. Perfect for designers and developers.",
     url: "https://palette.andresbr.com",
-    type: "website",
     images: [
       {
         url: "./opengraph-image.png",
