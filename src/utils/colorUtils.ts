@@ -110,8 +110,34 @@ export const findClosestColorName = (hex: string) => {
 
 export const getTextColor = (hex: string) => {
   const { r, g, b } = hexToRgb(hex);
-
   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
 
   return brightness > 128 ? "black" : "white";
+};
+
+export const generateShades = (hex: string, steps = 20): string[] => {
+  const shades: string[] = [];
+
+  const { r: baseR, g: baseG, b: baseB } = hexToRgb(hex);
+
+  for (let i = 0; i < steps; i++) {
+    let r, g, b;
+
+    if (i < steps / 2) {
+      const factor = (i) / (steps / 2);
+      r = Math.round(255 * (1 - factor) + baseR * factor);
+      g = Math.round(255 * (1 - factor) + baseG * factor);
+      b = Math.round(255 * (1 - factor) + baseB * factor);
+    } else {
+      const factor = (i - steps / 2) / (steps / 2);
+      r = Math.round(baseR * (1 - factor));
+      g = Math.round(baseG * (1 - factor));
+      b = Math.round(baseB * (1 - factor));
+    }
+
+    const hexShade = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
+    shades.push(hexShade);
+  }
+
+  return shades;
 };
