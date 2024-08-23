@@ -77,6 +77,7 @@ export const hexToHsb = (hex: string) => {
 
 export const generateRandomColorFromList = () => {
   const randomIndex = Math.floor(Math.random() * colorNameList.length);
+
   const { hex } = colorNameList[randomIndex];
   const name = findClosestColorName(hex);
   return { hex, name };
@@ -89,6 +90,8 @@ const calculateColorDistance = (color1: { r: number, g: number, b: number }, col
   return Math.sqrt(dr * dr + dg * dg + db * db);
 };
 
+/* TODO: Update to search for the name directly using the API instead
+ of iterating through all colors again https://github.com/Andresuito/palette/issues/1 */
 export const findClosestColorName = (hex: string) => {
   const targetRgb = hexToRgb(hex);
   
