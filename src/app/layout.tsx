@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 import { PaletteProvider } from "@/context/PaletteContext";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -79,6 +80,7 @@ export default function RootLayout({
             />
           </PaletteProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
