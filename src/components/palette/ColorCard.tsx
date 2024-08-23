@@ -12,6 +12,12 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { HexColorPicker } from "react-colorful";
 import { Input } from "../ui/input";
 import { usePalette } from "@/context/PaletteContext";
@@ -25,6 +31,7 @@ import {
   hexToHsl,
   hexToCmyk,
   hexToHsb,
+  generateShades,
 } from "@/utils/colorUtils";
 import { PaintBucket } from "lucide-react";
 import { toast } from "sonner";
@@ -34,7 +41,7 @@ interface ColorCardProps {
   index: number;
 }
 
-const ColorCard: React.FC<ColorCardProps> = ({ color, index }) => {
+const ColorCard = ({ color, index }: ColorCardProps) => {
   const {
     isHovered,
     colorFormats,
@@ -43,6 +50,7 @@ const ColorCard: React.FC<ColorCardProps> = ({ color, index }) => {
     generateNewColor,
     generateAndSaveNewPalette,
   } = usePalette();
+  const [showShades, setShowShades] = useState(false);
   const [removingColorIndex, setRemovingColorIndex] = useState<number | null>(
     null
   );
@@ -54,30 +62,34 @@ const ColorCard: React.FC<ColorCardProps> = ({ color, index }) => {
     null
   );
 
+  const format = colorFormats.length;
+
   useEffect(() => {
     if (selectedColorIndex === index) {
       setInputColor(color.hex);
     }
   }, [color.hex, selectedColorIndex, index]);
 
-  const handlePinClick = (index: number) => {
-    const newColors = colors.map((color, i) =>
-      i === index ? { ...color, isPinned: !color.isPinned } : color
-    );
+  const updateColors = (newColors: any[]) => {
     setColors(newColors);
     localStorage.setItem("palette", JSON.stringify(newColors));
   };
 
-  const handleClearColor = (index: number) => {
+  const handlePinClick = () => {
+    const newColors = colors.map((c, i) =>
+      i === index ? { ...c, isPinned: !c.isPinned } : c
+    );
+    updateColors(newColors);
+  };
+
+  const handleClearColor = () => {
     setRemovingColorIndex(index);
     setTimeout(() => {
       const newColors = colors.filter((_, i) => i !== index);
-      setColors(newColors);
+      updateColors(newColors);
       setRemovingColorIndex(null);
       if (newColors.length === 0) {
         generateAndSaveNewPalette();
-      } else {
-        localStorage.setItem("palette", JSON.stringify(newColors));
       }
     }, 300);
   };
@@ -95,19 +107,13 @@ const ColorCard: React.FC<ColorCardProps> = ({ color, index }) => {
       setTimeout(() => {
         if (isValidHex(newColor)) {
           setInputColor(newColor);
-
           if (selectedColorIndex !== null) {
-            const newColors = colors.map((color, index) =>
-              index === selectedColorIndex
-                ? {
-                    ...color,
-                    hex: newColor,
-                    name: findClosestColorName(newColor),
-                  }
-                : color
+            const newColors = colors.map((c, i) =>
+              i === selectedColorIndex
+                ? { ...c, hex: newColor, name: findClosestColorName(newColor) }
+                : c
             );
-            setColors(newColors);
-            localStorage.setItem("palette", JSON.stringify(newColors));
+            updateColors(newColors);
           }
         }
       }, 500)
@@ -115,8 +121,7 @@ const ColorCard: React.FC<ColorCardProps> = ({ color, index }) => {
   };
 
   const getTextColorClass = (hex: string) => {
-    const textColor = getTextColor(hex);
-    return textColor === "black" ? "text-black" : "text-white";
+    return getTextColor(hex) === "black" ? "text-black" : "text-white";
   };
 
   const getColorFormats = (hex: string) => {
@@ -128,8 +133,54 @@ const ColorCard: React.FC<ColorCardProps> = ({ color, index }) => {
       HSB: hexToHsb(hex),
       CMYK: hexToCmyk(hex),
     };
-    return colorFormats.map((format) => formats[format]);
+    return colorFormats
+      .filter((format) => formats[format])
+      .map((format) => formats[format]);
   };
+
+  const handleClipboardCopy = (text: string, description: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success("Text copied to clipboard!", {
+      duration: 1500,
+      description,
+    });
+  };
+
+  const renderIconButton = (
+    Icon: React.ComponentType<any>,
+    onClick: () => void,
+    disabled = false,
+    tooltipContent: string
+  ) => (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger>
+          <Button
+            variant="icon"
+            size="icon"
+            className={`lg:opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out ${
+              color.isPinned ? "opacity-100" : ""
+            } ${
+              disabled
+                ? "group-hover:disabled:opacity-20 disabled:opacity-20"
+                : ""
+            }`}
+            onClick={onClick}
+            disabled={disabled}
+          >
+            <Icon
+              className={`h-[1.0rem] w-[1.0rem] ${getTextColorClass(
+                color.hex
+              )}`}
+            />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{tooltipContent}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
 
   return (
     <div
@@ -139,101 +190,68 @@ const ColorCard: React.FC<ColorCardProps> = ({ color, index }) => {
       style={{ backgroundColor: color.hex }}
     >
       <div className="absolute top-2 left-2 flex space-x-2 group">
-        <Button
-          variant="icon"
-          size="icon"
-          onClick={() => handlePinClick(index)}
-          className={`opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out ${
-            color.isPinned ? "opacity-100" : ""
-          }`}
-        >
-          {color.isPinned ? (
-            <DrawingPinFilledIcon
-              className={`h-[1.0rem] w-[1.0rem] ${getTextColorClass(
-                color.hex
-              )}`}
-            />
-          ) : (
-            <DrawingPinIcon
-              className={`h-[1.0rem] w-[1.0rem] ${getTextColorClass(
-                color.hex
-              )}`}
-            />
-          )}
-        </Button>
-        <Button
-          variant="icon"
-          size="icon"
-          className="group-hover:disabled:opacity-20 disabled:opacity-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
-          onClick={() => {
+        {renderIconButton(
+          color.isPinned ? DrawingPinFilledIcon : DrawingPinIcon,
+          handlePinClick,
+          false,
+          color.isPinned ? "Unpin Color" : "Pin Color"
+        )}
+        {renderIconButton(
+          ReloadIcon,
+          () => {
             if (!color.isPinned) {
               const newColors = colors.map((c, i) =>
                 i === index ? { ...generateNewColor(), isPinned: false } : c
               );
-              setColors(newColors);
-              localStorage.setItem("palette", JSON.stringify(newColors));
+              updateColors(newColors);
             }
-          }}
-          disabled={color.isPinned}
-        >
-          <ReloadIcon
-            className={`h-[1.0rem] w-[1.0rem] ${getTextColorClass(color.hex)}`}
-          />
-        </Button>
-        <Button
-          variant="icon"
-          size="icon"
-          className={`opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out ${
-            color.isPinned ? "opacity-100" : ""
-          }`}
-        >
-          <ShadowIcon
-            className={`h-[1.0rem] w-[1.0rem] ${getTextColorClass(color.hex)}`}
-          />
-        </Button>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="icon"
-              size="icon"
-              className={`opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out ${
-                color.isPinned ? "opacity-100" : ""
-              }`}
-              onClick={() => setSelectedColorIndex(index)}
-            >
-              <PaintBucket
-                className={`h-[1.0rem] w-[1.0rem] ${getTextColorClass(
-                  color.hex
-                )}`}
-              />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent align="center" className="w-fit p-4">
-            <HexColorPicker color={inputColor} onChange={handleColorChange} />
-            <div className="relative">
-              <Input
-                value={inputColor}
-                onChange={(e) => handleColorChange(e.target.value)}
-                className="mt-4 relative"
-              />
-              <div
-                className="top-1.5 right-2 absolute size-5 rounded-full"
-                style={{ backgroundColor: inputColor }}
-              ></div>
-            </div>
-          </PopoverContent>
-        </Popover>
-        <Button
-          variant="icon"
-          size="icon"
-          className="group-hover:disabled:opacity-20 disabled:opacity-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
-          onClick={() => handleClearColor(index)}
-          disabled={color.isPinned}
-        >
-          <Cross1Icon
-            className={`h-[1.0rem] w-[1.0rem] ${getTextColorClass(color.hex)}`}
-          />
-        </Button>
+          },
+          color.isPinned,
+          "Change Color"
+        )}
+        {format >= 1 && (
+          <>
+            {renderIconButton(
+              ShadowIcon,
+              () => setShowShades(!showShades),
+              false,
+              "Show Shades"
+            )}
+            <Popover>
+              <PopoverTrigger asChild>
+                {renderIconButton(
+                  PaintBucket,
+                  () => setSelectedColorIndex(index),
+                  false,
+                  "Pick Color"
+                )}
+              </PopoverTrigger>
+              <PopoverContent align="center" className="w-fit p-4">
+                <HexColorPicker
+                  color={inputColor}
+                  onChange={handleColorChange}
+                />
+                <div className="relative">
+                  <Input
+                    value={inputColor}
+                    onChange={(e) => handleColorChange(e.target.value)}
+                    className="mt-4 relative"
+                  />
+                  <div
+                    className="top-1.5 right-2 absolute size-5 rounded-full"
+                    style={{ backgroundColor: inputColor }}
+                  />
+                </div>
+              </PopoverContent>
+            </Popover>
+          </>
+        )}
+        {renderIconButton(
+          Cross1Icon,
+          handleClearColor,
+          color.isPinned,
+          "Remove Color"
+        )}
       </div>
       <div className="flex-row py-10 xl:py-0">
         <h1
@@ -244,22 +262,18 @@ const ColorCard: React.FC<ColorCardProps> = ({ color, index }) => {
           {color.name}
         </h1>
         <div
-          className={`flex flex-col items-center space-y-1 mx-auto justify-center text-center px-2 rounded-md transition-all duration-300 ease-in-out ${
-            isHovered
-              ? "border-2 border-red-500"
+          className={`flex flex-col items-center space-y-1 mx-auto justify-center text-center px-2 rounded-md duration-300 ease-in-out ${
+            isHovered && format >= 1
+              ? "border-2 border-red-500/70"
               : "border-2 border-transparent"
           }`}
         >
           {getColorFormats(color.hex).map((format, i) => (
             <p
               key={i}
-              onClick={() => {
-                navigator.clipboard.writeText(format);
-                toast.success("Text copied to clipboard!", {
-                  duration: 1500,
-                  description: `Copied format: ${format}`,
-                });
-              }}
+              onClick={() =>
+                handleClipboardCopy(format, `Copied format: ${format}`)
+              }
               className={`cursor-pointer text-lg uppercase select-none ${getTextColorClass(
                 color.hex
               )}`}
@@ -269,6 +283,36 @@ const ColorCard: React.FC<ColorCardProps> = ({ color, index }) => {
           ))}
         </div>
       </div>
+      {format >= 1 && (
+        <div
+          className={`flex flex-col justify-center transition-all duration-500 ease-in-out overflow-hidden rounded lg:mt-5 ${
+            showShades
+              ? "max-h-[700px] opacity-100 mb-10 xl:mb-0"
+              : "max-h-0 opacity-0"
+          }`}
+        >
+          {generateShades(color.hex).map((shade, i) => {
+            const shadeFormats = getColorFormats(shade);
+            return (
+              <div
+                key={i}
+                className="w-40 px-2 py-1 flex items-center justify-center cursor-pointer select-none"
+                style={{ backgroundColor: shade }}
+                onClick={() =>
+                  handleClipboardCopy(
+                    shadeFormats[0],
+                    `Copied shade: ${shadeFormats[0]}`
+                  )
+                }
+              >
+                <span className={`text-xs ${getTextColorClass(shade)}`}>
+                  {shadeFormats[0]}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
