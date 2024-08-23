@@ -12,12 +12,6 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { HexColorPicker } from "react-colorful";
 import { Input } from "../ui/input";
 import { usePalette } from "@/context/PaletteContext";
@@ -149,43 +143,27 @@ const ColorCard = ({ color, index }: ColorCardProps) => {
   const renderIconButton = (
     Icon: React.ComponentType<any>,
     onClick: () => void,
-    disabled = false,
-    tooltipContent: string
+    disabled = false
   ) => (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger>
-          <Button
-            variant="icon"
-            size="icon"
-            className={`lg:opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out ${
-              color.isPinned ? "opacity-100" : ""
-            } ${
-              disabled
-                ? "group-hover:disabled:opacity-20 disabled:opacity-20"
-                : ""
-            }`}
-            onClick={onClick}
-            disabled={disabled}
-          >
-            <Icon
-              className={`h-[1.0rem] w-[1.0rem] ${getTextColorClass(
-                color.hex
-              )}`}
-            />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>{tooltipContent}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Button
+      variant="icon"
+      size="icon"
+      className={`lg:opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out ${
+        color.isPinned ? "opacity-100" : ""
+      } ${
+        disabled ? "group-hover:disabled:opacity-20 disabled:opacity-20" : ""
+      }`}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      <Icon className={`h-4 w-4 ${getTextColorClass(color.hex)}`} />
+    </Button>
   );
 
   return (
     <div
-      className={`flex-1 h-full flex rounded-md flex-col justify-center items-center relative group ${
-        removingColorIndex === index ? "slide-out flex-transition" : ""
+      className={`flex-1 h-full flex rounded-lg flex-col justify-center items-center relative overflow-hidden group transition-transform transform ${
+        removingColorIndex === index ? "scale-90 opacity-50" : "scale-100"
       }`}
       style={{ backgroundColor: color.hex }}
     >
@@ -193,8 +171,7 @@ const ColorCard = ({ color, index }: ColorCardProps) => {
         {renderIconButton(
           color.isPinned ? DrawingPinFilledIcon : DrawingPinIcon,
           handlePinClick,
-          false,
-          color.isPinned ? "Unpin Color" : "Pin Color"
+          false
         )}
         {renderIconButton(
           ReloadIcon,
@@ -206,39 +183,39 @@ const ColorCard = ({ color, index }: ColorCardProps) => {
               updateColors(newColors);
             }
           },
-          color.isPinned,
-          "Change Color"
+          color.isPinned
         )}
         {format >= 1 && (
           <>
             {renderIconButton(
               ShadowIcon,
               () => setShowShades(!showShades),
-              false,
-              "Show Shades"
+              false
             )}
             <Popover>
               <PopoverTrigger asChild>
                 {renderIconButton(
                   PaintBucket,
                   () => setSelectedColorIndex(index),
-                  false,
-                  "Pick Color"
+                  false
                 )}
               </PopoverTrigger>
-              <PopoverContent align="center" className="w-fit p-4">
+              <PopoverContent
+                align="center"
+                className="w-fit p-4 bg-white rounded-lg shadow-lg"
+              >
                 <HexColorPicker
                   color={inputColor}
                   onChange={handleColorChange}
                 />
-                <div className="relative">
+                <div className="relative mt-4">
                   <Input
                     value={inputColor}
                     onChange={(e) => handleColorChange(e.target.value)}
-                    className="mt-4 relative"
+                    className="relative"
                   />
                   <div
-                    className="top-1.5 right-2 absolute size-5 rounded-full"
+                    className="absolute top-1.5 right-2 h-5 w-5 rounded-full"
                     style={{ backgroundColor: inputColor }}
                   />
                 </div>
@@ -246,14 +223,9 @@ const ColorCard = ({ color, index }: ColorCardProps) => {
             </Popover>
           </>
         )}
-        {renderIconButton(
-          Cross1Icon,
-          handleClearColor,
-          color.isPinned,
-          "Remove Color"
-        )}
+        {renderIconButton(Cross1Icon, handleClearColor, color.isPinned)}
       </div>
-      <div className="flex-row py-10 xl:py-0">
+      <div className="flex-row py-10 xl:py-5">
         <h1
           className={`text-2xl text-center font-semibold select-none ${getTextColorClass(
             color.hex
@@ -262,7 +234,7 @@ const ColorCard = ({ color, index }: ColorCardProps) => {
           {color.name}
         </h1>
         <div
-          className={`flex flex-col items-center space-y-1 mx-auto justify-center text-center px-2 rounded-md duration-300 ease-in-out ${
+          className={`flex flex-col items-center space-y-1 mx-auto justify-center text-center px-2 rounded-md transition-all duration-300 ease-in-out ${
             isHovered && format >= 1
               ? "border-2 border-red-500/70"
               : "border-2 border-transparent"
@@ -285,7 +257,7 @@ const ColorCard = ({ color, index }: ColorCardProps) => {
       </div>
       {format >= 1 && (
         <div
-          className={`flex flex-col justify-center transition-all duration-500 ease-in-out overflow-hidden rounded lg:mt-5 ${
+          className={`flex flex-col justify-center transition-all duration-500 ease-in-out overflow-hidden rounded-lg ${
             showShades
               ? "max-h-[700px] opacity-100 mb-10 xl:mb-0"
               : "max-h-0 opacity-0"
