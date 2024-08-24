@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { usePalette } from "@/context/PaletteContext";
 import Spinner from "./Spinner";
 import ColorCard from "./ColorCard";

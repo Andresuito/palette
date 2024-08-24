@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import ConfigPallete from "@/components/palette/ConfigPalette/ConfigPalette";
 import Palette from "@/components/palette/Palette";
 import GenerateNewPalette from "@/components/palette/GenerateNewPalette";

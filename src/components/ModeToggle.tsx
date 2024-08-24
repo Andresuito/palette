@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { SunIcon, MoonIcon } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
 

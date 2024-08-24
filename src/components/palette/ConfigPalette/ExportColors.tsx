@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { Share1Icon } from "@radix-ui/react-icons";
 import { Image, FileText, Link } from "lucide-react";

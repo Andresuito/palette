@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "next/link";
 import { ModeToggle } from "./ModeToggle";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";

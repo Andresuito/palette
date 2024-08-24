@@ -17,23 +17,21 @@ const ColorFormatSection = ({
     onMouseEnter={() => setIsHovered(true)}
     onMouseLeave={() => setIsHovered(false)}
   >
-    <div className="text-sm">
-      <h1 className="mb-4 text-lg font-semibold">Color Format</h1>
-      <div className="grid grid-cols-2 gap-2 items-center">
-        {ColorFormatOptions.map((format) => (
-          <div key={format} className="flex items-center space-x-1">
-            <Checkbox
-              id={`${format}`}
-              checked={colorFormats.includes(format)}
-              onCheckedChange={() => handleCheckboxChange(format)}
-              aria-labelledby={`label-${format}`}
-            />
-            <Label id={`label-${format}`} htmlFor={`${format}`}>
-              {format}
-            </Label>
-          </div>
-        ))}
-      </div>
+    <h1 className="mb-1 font-medium">Color Format</h1>
+    <div className="grid grid-cols-2 gap-2 items-center">
+      {ColorFormatOptions.map((format) => (
+        <div key={format} className="flex items-center space-x-1">
+          <Checkbox
+            id={`${format}`}
+            checked={colorFormats.includes(format)}
+            onCheckedChange={() => handleCheckboxChange(format)}
+            aria-labelledby={`label-${format}`}
+          />
+          <Label id={`label-${format}`} htmlFor={`${format}`}>
+            {format}
+          </Label>
+        </div>
+      ))}
     </div>
   </div>
 );

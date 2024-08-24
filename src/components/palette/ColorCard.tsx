@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   DrawingPinIcon,
   DrawingPinFilledIcon,
@@ -44,6 +44,7 @@ const ColorCard = ({ color, index }: ColorCardProps) => {
     generateNewColor,
     generateAndSaveNewPalette,
   } = usePalette();
+
   const [showShades, setShowShades] = useState(false);
   const [removingColorIndex, setRemovingColorIndex] = useState<number | null>(
     null
@@ -64,10 +65,13 @@ const ColorCard = ({ color, index }: ColorCardProps) => {
     }
   }, [color.hex, selectedColorIndex, index]);
 
-  const updateColors = (newColors: any[]) => {
-    setColors(newColors);
-    localStorage.setItem("palette", JSON.stringify(newColors));
-  };
+  const updateColors = useCallback(
+    (newColors: any[]) => {
+      setColors(newColors);
+      localStorage.setItem("palette", JSON.stringify(newColors));
+    },
+    [setColors]
+  );
 
   const handlePinClick = () => {
     const newColors = colors.map((c, i) =>
@@ -172,8 +176,7 @@ const ColorCard = ({ color, index }: ColorCardProps) => {
       <div className="absolute top-2 left-2 flex space-x-2 group">
         {renderIconButton(
           color.isPinned ? DrawingPinFilledIcon : DrawingPinIcon,
-          handlePinClick,
-          false
+          handlePinClick
         )}
         {renderIconButton(
           ReloadIcon,
@@ -189,17 +192,11 @@ const ColorCard = ({ color, index }: ColorCardProps) => {
         )}
         {format >= 1 && (
           <>
-            {renderIconButton(
-              ShadowIcon,
-              () => setShowShades(!showShades),
-              false
-            )}
+            {renderIconButton(ShadowIcon, () => setShowShades((prev) => !prev))}
             <Popover>
               <PopoverTrigger asChild>
-                {renderIconButton(
-                  PaintBucket,
-                  () => setSelectedColorIndex(index),
-                  false
+                {renderIconButton(PaintBucket, () =>
+                  setSelectedColorIndex(index)
                 )}
               </PopoverTrigger>
               <PopoverContent align="center" className="w-fit p-4">
@@ -256,7 +253,7 @@ const ColorCard = ({ color, index }: ColorCardProps) => {
       </div>
       {format >= 1 && (
         <div
-          className={`flex flex-col justify-center transition-all duration-500 ease-in-out overflow-hidden rounded-xl lg:mt-5 ${
+          className={`flex flex-col w-fit justify-center transition-all duration-500 ease-in-out overflow-hidden rounded-xl lg:mt-5 ${
             showShades
               ? "max-h-[700px] opacity-100 mb-10 xl:mb-0"
               : "max-h-0 opacity-0"
@@ -267,7 +264,7 @@ const ColorCard = ({ color, index }: ColorCardProps) => {
             return (
               <div
                 key={i}
-                className="w-40 px-2 py-1 flex items-center justify-center cursor-pointer select-none"
+                className="px-10 py-1 flex items-center justify-center cursor-pointer select-none"
                 style={{ backgroundColor: shade }}
                 onClick={() =>
                   handleClipboardCopy(
@@ -276,7 +273,7 @@ const ColorCard = ({ color, index }: ColorCardProps) => {
                   )
                 }
               >
-                <span className={`text-xs ${getTextColorClass(shade)}`}>
+                <span className={`text-sm ${getTextColorClass(shade)}`}>
                   {shadeFormats[0]}
                 </span>
               </div>
