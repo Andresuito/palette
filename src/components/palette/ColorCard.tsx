@@ -7,11 +7,6 @@ import {
   ShadowIcon,
 } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
 import { HexColorPicker } from "react-colorful";
 import { Input } from "../ui/input";
 import { usePalette } from "@/context/PaletteContext";
@@ -27,6 +22,11 @@ import {
   hexToHsb,
   generateShades,
 } from "@/utils/colorUtils";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 import { PaintBucket } from "lucide-react";
 import { toast } from "sonner";
 
@@ -151,19 +151,21 @@ const ColorCard = ({ color, index }: ColorCardProps) => {
       className={`lg:opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out ${
         color.isPinned ? "opacity-100" : ""
       } ${
-        disabled ? "group-hover:disabled:opacity-20 disabled:opacity-20" : ""
+        disabled ? "group-hover:disabled:opacity-20 lg:disabled:opacity-0" : ""
       }`}
       onClick={onClick}
       disabled={disabled}
     >
-      <Icon className={`h-4 w-4 ${getTextColorClass(color.hex)}`} />
+      <Icon
+        className={`h-[1.0rem] w-[1.0rem] ${getTextColorClass(color.hex)}`}
+      />
     </Button>
   );
 
   return (
     <div
-      className={`flex-1 h-full flex rounded-lg flex-col justify-center items-center relative overflow-hidden group transition-transform transform ${
-        removingColorIndex === index ? "scale-90 opacity-50" : "scale-100"
+      className={`flex-1 h-full flex rounded-md flex-col justify-center items-center relative group ${
+        removingColorIndex === index ? "slide-out flex-transition" : ""
       }`}
       style={{ backgroundColor: color.hex }}
     >
@@ -200,22 +202,19 @@ const ColorCard = ({ color, index }: ColorCardProps) => {
                   false
                 )}
               </PopoverTrigger>
-              <PopoverContent
-                align="center"
-                className="w-fit p-4 bg-white rounded-lg shadow-lg"
-              >
+              <PopoverContent align="center" className="w-fit p-4">
                 <HexColorPicker
                   color={inputColor}
                   onChange={handleColorChange}
                 />
-                <div className="relative mt-4">
+                <div className="relative">
                   <Input
                     value={inputColor}
                     onChange={(e) => handleColorChange(e.target.value)}
-                    className="relative"
+                    className="mt-4 relative"
                   />
                   <div
-                    className="absolute top-1.5 right-2 h-5 w-5 rounded-full"
+                    className="top-1.5 right-2 absolute size-5 rounded-full"
                     style={{ backgroundColor: inputColor }}
                   />
                 </div>
@@ -225,7 +224,7 @@ const ColorCard = ({ color, index }: ColorCardProps) => {
         )}
         {renderIconButton(Cross1Icon, handleClearColor, color.isPinned)}
       </div>
-      <div className="flex-row py-10 xl:py-5">
+      <div className="flex-row py-10 xl:py-0">
         <h1
           className={`text-2xl text-center font-semibold select-none ${getTextColorClass(
             color.hex
@@ -234,7 +233,7 @@ const ColorCard = ({ color, index }: ColorCardProps) => {
           {color.name}
         </h1>
         <div
-          className={`flex flex-col items-center space-y-1 mx-auto justify-center text-center px-2 rounded-md transition-all duration-300 ease-in-out ${
+          className={`flex flex-col items-center space-y-1 mx-auto justify-center text-center px-2 rounded-md duration-300 ease-in-out ${
             isHovered && format >= 1
               ? "border-2 border-red-500/70"
               : "border-2 border-transparent"
@@ -257,7 +256,7 @@ const ColorCard = ({ color, index }: ColorCardProps) => {
       </div>
       {format >= 1 && (
         <div
-          className={`flex flex-col justify-center transition-all duration-500 ease-in-out overflow-hidden rounded-lg ${
+          className={`flex flex-col justify-center transition-all duration-500 ease-in-out overflow-hidden rounded-xl lg:mt-5 ${
             showShades
               ? "max-h-[700px] opacity-100 mb-10 xl:mb-0"
               : "max-h-0 opacity-0"
